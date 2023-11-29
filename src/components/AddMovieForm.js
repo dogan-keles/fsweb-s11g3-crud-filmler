@@ -4,67 +4,58 @@ import { Link } from "react-router-dom";
 
 import axios from "axios";
 
-const EditMovieForm = (props) => {
+const AddMovieForm = (props) => {
   const { push } = useHistory();
   const { id } = useParams();
-  const { setMovies } = props;
-  const [movie, setMovie] = useState({
+  const { setMovies, movies } = props;
+  const [newMovie, setNewMovie] = useState({
     title: "",
     director: "",
     genre: "",
     metascore: 0,
     description: "",
+    id: `${Date.now()}`,
   });
 
   const handleChange = (e) => {
-    setMovie({
-      ...movie,
+    setNewMovie({
+      ...newMovie,
       [e.target.name]: e.target.value,
     });
   };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .put(`http://localhost:9000/api/movies/${id}`, movie)
+      .post(`http://localhost:9000/api/movies/`, newMovie)
       .then((res) => {
+        console.log(res.data);
         setMovies(res.data);
-        push(`/movies/${id}`);
+        push(`/movies`);
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
-  const { title, director, genre, metascore, description } = movie;
+  const { title, director, genre, metascore, description } = newMovie;
 
   return (
     <div className="bg-white rounded-md shadow flex-1">
       <form onSubmit={handleSubmit}>
         <div className="p-5 pb-3 border-b border-zinc-200">
           <h4 className="text-xl font-bold">
-            Düzenleniyor <strong>{movie.title}</strong>
+            Ekleniyor... <strong>{newMovie.title}</strong>
           </h4>
         </div>
 
         <div className="px-5 py-3">
           <div className="py-2">
             <label className="block pb-1 text-lg">Title</label>
-            <input
-              value={title}
-              onChange={handleChange}
-              name="title"
-              type="text"
-            />
+            <input onChange={handleChange} name="title" type="text" />
           </div>
           <div className="py-2">
             <label className="block pb-1 text-lg">Director</label>
-            <input
-              value={director}
-              onChange={handleChange}
-              name="director"
-              type="text"
-            />
+            <input onChange={handleChange} name="director" type="text" />
           </div>
           <div className="py-2">
             <label className="block pb-1 text-lg">Genre</label>
@@ -77,20 +68,11 @@ const EditMovieForm = (props) => {
           </div>
           <div className="py-2">
             <label className="block pb-1 text-lg">Metascore</label>
-            <input
-              value={metascore}
-              onChange={handleChange}
-              name="metascore"
-              type="number"
-            />
+            <input onChange={handleChange} name="metascore" type="number" />
           </div>
           <div className="py-2">
             <label className="block pb-1 text-lg">Description</label>
-            <textarea
-              value={description}
-              onChange={handleChange}
-              name="description"
-            ></textarea>
+            <textarea onChange={handleChange} name="description"></textarea>
           </div>
         </div>
 
@@ -110,4 +92,4 @@ const EditMovieForm = (props) => {
   );
 };
 
-export default EditMovieForm;
+export default AddMovieForm;

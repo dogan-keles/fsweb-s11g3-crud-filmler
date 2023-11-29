@@ -1,35 +1,33 @@
 import React, { useEffect, useState } from "react";
 
 import { Route, Switch, Redirect } from "react-router-dom";
-import MovieList from './components/MovieList';
-import Movie from './components/Movie';
+import MovieList from "./components/MovieList";
+import Movie from "./components/Movie";
 
-import MovieHeader from './components/MovieHeader';
+import MovieHeader from "./components/MovieHeader";
 
-import FavoriteMovieList from './components/FavoriteMovieList';
+import FavoriteMovieList from "./components/FavoriteMovieList";
 
-import axios from 'axios';
+import axios from "axios";
+import EditMovieForm from "./components/EditMovieForm";
+import AddMovieForm from "./components/AddMovieForm";
 
 const App = (props) => {
   const [movies, setMovies] = useState([]);
-  const [favoriteMovies, setFavoriteMovies] = useState([]);
+  const [favoriteMovies, setFavoriteMovies] = useState(
+    JSON.parse(localStorage.getItem("S11G3")) || []
+  );
 
   useEffect(() => {
-    axios.get('http://localhost:9000/api/movies')
-      .then(res => {
+    axios
+      .get("http://localhost:9000/api/movies")
+      .then((res) => {
         setMovies(res.data);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   }, []);
-
-  const deleteMovie = (id) => {
-  }
-
-  const addToFavorites = (movie) => {
-
-  }
 
   return (
     <div>
@@ -43,11 +41,20 @@ const App = (props) => {
           <FavoriteMovieList favoriteMovies={favoriteMovies} />
 
           <Switch>
+            <Route path="/movies/add">
+              <AddMovieForm movies={movies} setMovies={setMovies} />
+            </Route>
             <Route path="/movies/edit/:id">
+              <EditMovieForm setMovies={setMovies} movies={movies} />
             </Route>
 
             <Route path="/movies/:id">
-              <Movie />
+              <Movie
+                setMovies={setMovies}
+                movies={movies}
+                favoriteMovies={favoriteMovies}
+                setFavoriteMovies={setFavoriteMovies}
+              />
             </Route>
 
             <Route path="/movies">
@@ -64,6 +71,4 @@ const App = (props) => {
   );
 };
 
-
 export default App;
-

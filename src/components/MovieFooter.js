@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 const MovieFooter = (props) => {
   const { totalMovies } = props;
@@ -8,6 +8,6 @@ const MovieFooter = (props) => {
       <b>{totalMovies}</b> film gösteriliyor
     </div>
   );
-}
+};
 
 export default MovieFooter;
